@@ -24,19 +24,22 @@ The system is intentionally built without machine learning dependencies — demo
 ## Architecture
 
 ### IPO Pipeline
+
+```
 Raw Input
-|
-v
+    |
+    v
 [ SANITIZE ]          .lower().strip() + regex normalization + tokenization
-|
-v
+    |
+    v
 [ MATCH INTENT ]      O(1) synonym lookup -> keyword voting -> confidence gate
-|
-v
+    |
+    v
 [ GENERATE RESPONSE ] personalize -> log to memory -> display
-|
-v
+    |
+    v
 Output
+```
 
 ### Module Responsibilities
 
@@ -55,10 +58,12 @@ An `if-elif` ladder performs a sequential scan — O(n) worst-case. Every new in
 ---
 
 ## Repository Structure
+
+```
 decodelabs-ai-project1/
 |
 +-- chatbot/
-|   +-- init.py           Package entry point
+|   +-- __init__.py           Package entry point
 |   +-- knowledge_base.py     Intent dictionary, synonym map, keyword map
 |   +-- sanitizer.py          sanitize(), is_empty(), tokenize()
 |   +-- matcher.py            Phase 1 + Phase 2 matchers, confidence scorer
@@ -69,7 +74,7 @@ decodelabs-ai-project1/
 |   +-- project1_chatbot.ipynb    19-cell Jupyter Notebook
 |
 +-- tests/
-|   +-- init.py
+|   +-- __init__.py
 |   +-- test_chatbot.py       61 unit tests across all modules
 |
 +-- report/
@@ -80,6 +85,7 @@ decodelabs-ai-project1/
 +-- .gitignore
 +-- requirements.txt
 +-- README.md
+```
 
 ---
 
@@ -125,27 +131,38 @@ python -m pytest tests/ -v
 ---
 
 ## Sample Session
+
+```
 ==============================================================
-CapitalIQ  v2.0.0  --  Finance & Investment Advisory
-DecodeLabs AI Internship  |  Batch 2026  |  Ali Ahmad
-Topics: stocks · bonds · ETFs · crypto · SIPs · IPOs
-Type 'exit' or 'quit' to end the session.
-You: hello
-CapitalIQ: Hello! I'm CapitalIQ, your Finance & Investment Advisor.
-Ask me about stocks, bonds, mutual funds, ETFs, crypto,
-inflation, SIPs, IPOs, and more.
-You: my name is Ali
-CapitalIQ: Nice to meet you, Ali! ...
-You: what is compound interest
-CapitalIQ: Compound interest is interest earned on both your original
-principal AND accumulated interest from previous periods...
-[Intent: compound_interest | Confidence: 0.250]
-You: btc
-CapitalIQ: Cryptocurrency is a decentralised digital currency...
-[Intent: crypto | Confidence: 1.000]
-You: quit
-CapitalIQ: It was a pleasure advising you today. Goodbye!
-[Session transcript displayed]
+  CapitalIQ  v2.0.0  --  Finance & Investment Advisory
+  DecodeLabs AI Internship  |  Batch 2026  |  Ali Ahmad
+==============================================================
+  Topics: stocks · bonds · ETFs · crypto · SIPs · IPOs
+  Type 'exit' or 'quit' to end the session.
+==============================================================
+
+  You: hello
+  CapitalIQ: Hello! I'm CapitalIQ, your Finance & Investment Advisor.
+             Ask me about stocks, bonds, mutual funds, ETFs, crypto,
+             inflation, SIPs, IPOs, and more.
+
+  You: my name is Ali
+  CapitalIQ: Nice to meet you, Ali! ...
+
+  You: what is compound interest
+  CapitalIQ: Compound interest is interest earned on both your original
+             principal AND accumulated interest from previous periods...
+             [Intent: compound_interest | Confidence: 0.250]
+
+  You: btc
+  CapitalIQ: Cryptocurrency is a decentralised digital currency...
+             [Intent: crypto | Confidence: 1.000]
+
+  You: quit
+  CapitalIQ: It was a pleasure advising you today. Goodbye!
+
+  [Session transcript displayed]
+```
 
 ---
 
@@ -220,18 +237,24 @@ Edge cases explicitly covered: `None` input, empty string, whitespace-only, spec
 ### The White-Box Advantage
 
 Every response in CapitalIQ is fully traceable:
+
+```
 "BITCOIN!" -> sanitize -> "bitcoin" -> SYNONYM_MAP -> "crypto" -> KNOWLEDGE_BASE -> response
+```
 
 No hidden weights, no probability distributions, no hallucination risk. In regulated industries — finance (SEBI, SEC), healthcare (FDA AI/ML guidance), insurance (GDPR Article 22) — this kind of auditability is a compliance requirement, not a preference.
 
 ### Connection to Production AI Guardrail Systems
 
 In modern hybrid architectures, the rule-based layer sits above the LLM as a deterministic filter:
+
+```
 User Input
-|
-+-- Rule match? -- YES --> Instant Response  (zero latency, zero cost, zero hallucination)
-|
-+-- No match   -- NO  --> Pass to LLM        (flexible, but probabilistic)
+    |
+    +-- Rule match? -- YES --> Instant Response  (zero latency, zero cost, zero hallucination)
+    |
+    +-- No match   -- NO  --> Pass to LLM        (flexible, but probabilistic)
+```
 
 CapitalIQ's `CONFIDENCE_THRESHOLD` is the direct analogue of the routing threshold used in frameworks like NVIDIA NeMo Guardrails and Meta Llama Guard. High-confidence, known intents are resolved by the rule layer instantly. Only genuinely novel or ambiguous queries escalate to the LLM — reducing both cost and hallucination surface area.
 
