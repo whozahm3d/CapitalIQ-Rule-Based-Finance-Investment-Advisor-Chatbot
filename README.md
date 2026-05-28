@@ -1,219 +1,66 @@
-# 🌸 DecodeLabs AI — Project 2: Data Classification Using AI
+# 💹 CapitalIQ — Rule-Based Finance & Investment Advisor Chatbot
 
-![Python](https://img.shields.io/badge/Python-3.10%2B-blue?logo=python&logoColor=white)
-![scikit-learn](https://img.shields.io/badge/scikit--learn-1.4%2B-orange?logo=scikit-learn&logoColor=white)
-![Jupyter](https://img.shields.io/badge/Jupyter-Notebook-orange?logo=jupyter&logoColor=white)
-![License](https://img.shields.io/badge/License-MIT-green)
-![Status](https://img.shields.io/badge/Status-Active-brightgreen)
-![DecodeLabs](https://img.shields.io/badge/DecodeLabs-Batch%202026-purple)
+> **DecodeLabs AI Internship · Project 1 · Batch 2026**
+> Built by **Ali Ahmad**
 
-> **Industrial Training Kit | Batch 2026 | Powered by DecodeLabs**
-
----
-
-## 👤 Author
-**Ali Ahmad** — AI Engineering Intern, DecodeLabs Batch 2026
-GitHub: [whozahm3d](https://github.com/whozahm3d)
+[![Python](https://img.shields.io/badge/Python-3.10%2B-blue?logo=python)](https://www.python.org/)
+[![Standard Library](https://img.shields.io/badge/Dependencies-Standard%20Library%20Only-green)]()
+[![Tests](https://img.shields.io/badge/Tests-35%20Unit%20Tests-brightgreen)]()
+[![License](https://img.shields.io/badge/License-MIT-lightgrey)]()
 
 ---
 
-## 📄 Abstract
+## 📌 Project Overview
 
-This project implements a complete, production-grade supervised learning pipeline
-for multi-class data classification using the Iris benchmark dataset. It covers
-every stage of the ML engineering lifecycle — from raw data ingestion with
-source fallback logic, through exploratory analysis, preprocessing, model
-training, cross-validation, statistical significance testing, and explainability
-— culminating in a persisted sklearn Pipeline and a real-time interactive
-prediction interface.
+**CapitalIQ** is a production-quality, rule-based AI chatbot built as Project 1 of the DecodeLabs Artificial Intelligence Industrial Training programme. It operates as a Finance & Investment Advisor — answering questions about stocks, bonds, mutual funds, ETFs, cryptocurrency, inflation, compound interest, diversification, risk management, portfolio construction, budgeting, emergency funds, SIPs, and IPOs.
 
-The project goes significantly beyond the DecodeLabs Project 2 specification.
-Rather than training a single KNN classifier, it trains and rigorously compares
-four algorithms (KNN, Decision Tree, SVM, Logistic Regression) plus a soft-voting
-ensemble, evaluates each across five metrics, runs stratified k-fold
-cross-validation with paired t-test significance testing, and applies SHAP
-explainability to the best model. All code is modular, documented, and organized
-as a deployable Python package.
-
-As a portfolio artifact, this notebook demonstrates mastery of the full
-supervised learning workflow — data validation, feature scaling without leakage,
-hyperparameter tuning, domain-aware evaluation, and experiment reproducibility —
-skills that transfer directly to production ML engineering roles.
+The project is intentionally built without machine learning — demonstrating that a well-engineered deterministic system using the **IPO (Input-Process-Output) model** and **O(1) dictionary-based intent matching** can be both robust and portfolio-worthy.
 
 ---
 
-## 📋 Table of Contents
-
-- [Project Architecture](#-project-architecture)
-- [Dataset](#-dataset)
-- [Results](#-results)
-- [Visualizations](#-visualizations)
-- [Reproducibility](#-reproducibility)
-- [Project Structure](#-project-structure)
-- [Tech Stack](#-tech-stack)
-- [Known Limitations](#-known-limitations)
-- [Future Work](#-future-work)
-- [License](#-license)
-
----
-
-## 🏗️ Project Architecture
-
-Raw Data (HuggingFace primary / sklearn fallback)
-↓
-SHA-256 Data Hash (versioning integrity)
-↓
-Data Validation (shape · nulls · classes · duplicates)
-↓
-Exploratory Data Analysis
-(distributions · correlations · outliers · pairplot · violin)
-↓
-Dimensionality Reduction (PCA + t-SNE — separability check)
-↓
-Preprocessing
-StandardScaler — fit on X_train ONLY → transform X_train + X_test
-↓
-Train / Test Split (80/20 · stratified · shuffled · seed=42)
-↓
-┌──────────────────────────────────────────────────────┐
-│  KNN (optimal k)  │  Decision Tree  │  SVM  │  LR   │
-│                     + VotingClassifier (soft)        │
-└──────────────────────────────────────────────────────┘
-↓
-Stratified K-Fold Cross-Validation (5 folds · f1_macro)
-↓
-Paired t-Test — statistical significance between top 2 models
-↓
-GridSearchCV — hyperparameter tuning on best model
-↓
-Full Evaluation
-(Accuracy · F1 · Precision · Recall · ROC-AUC per model)
-↓
-Visualizations (14 plot types → assets/)
-↓
-SHAP Explainability + Calibration + Learning Curves
-↓
-Class Imbalance Demonstration (accuracy mirage proof)
-↓
-sklearn Pipeline Object (scaler + classifier chained)
-↓
-Model Persistence (joblib) + Experiment Log (CSV)
-↓
-Interactive Prediction Interface (ipywidgets · confidence threshold)
-↓
-Requirements Freeze (exact environment snapshot)
-
----
-
-## 📊 Dataset
-
-| Property | Value |
-|---|---|
-| Name | Iris Benchmark |
-| Source (primary) | HuggingFace `scikit-learn/iris` |
-| Source (fallback) | `sklearn.datasets.load_iris` |
-| Samples | 150 (balanced — 50 per class) |
-| Classes | 3 — Setosa, Versicolor, Virginica |
-| Features | 4 — sepal length, sepal width, petal length, petal width |
-| Missing Values | None |
-| Split | 80% train / 20% test (stratified) |
-
----
-
-## 📈 Results
-
-### Model Comparison (Test Set)
-
-| Model | Accuracy | F1 (macro) | Precision | Recall | ROC-AUC |
-|---|---|---|---|---|---|
-| KNN (optimal k) | ~0.967 | ~0.967 | ~0.968 | ~0.967 | ~0.997 |
-| Decision Tree | ~0.933 | ~0.933 | ~0.935 | ~0.933 | ~0.978 |
-| SVM (RBF) | ~0.967 | ~0.967 | ~0.968 | ~0.967 | ~0.998 |
-| Logistic Regression | ~0.967 | ~0.967 | ~0.968 | ~0.967 | ~0.997 |
-| Voting Ensemble | ~0.967 | ~0.967 | ~0.968 | ~0.967 | ~0.998 |
-
-### Cross-Validation Results (5-Fold Stratified · F1 macro)
-
-| Model | Mean F1 | Std F1 |
-|---|---|---|
-| KNN (optimal k) | ~0.960 | ±0.030 |
-| Decision Tree | ~0.940 | ±0.040 |
-| SVM (RBF) | ~0.973 | ±0.025 |
-| Logistic Regression | ~0.960 | ±0.030 |
-| Voting Ensemble | ~0.967 | ±0.025 |
-
-### Statistical Significance
-Paired t-test between best and second-best model.
-If p < 0.05: difference is statistically significant.
-Winner declared with p-value printed in Cell 32.
-
----
-
-## 🖼️ Visualizations
-
-| Plot | Description |
-|---|---|
-| Class Distribution | Bar chart of sample count per species |
-| Feature KDE | Kernel density + rug plots per feature |
-| Correlation Heatmap | Pearson r matrix across all 4 features |
-| Pairplot | All feature combinations colored by species |
-| Boxplots | IQR bounds with outlier markers per feature |
-| Violin Plots | Distribution shape + IQR per feature per class |
-| PCA + t-SNE | 2D projections showing natural class separability |
-| Elbow Curve | KNN error rate vs k with optimal k marked |
-| CV Bar Chart | Mean ± std F1 per model with error bars |
-| Model Comparison | Grouped bars — 5 metrics × 5 models |
-| Confusion Matrices | Annotated heatmap grid per model |
-| ROC Curves | Per-class curves with AUC for best model |
-| Feature Importance | Permutation importance horizontal bars per model |
-| Learning Curve | Train vs validation score with overfitting diagnosis |
-
----
-
-## 🔁 Reproducibility
-
-```bash
-git clone https://github.com/whozahm3d/decodelabs-ai-project2.git
-cd decodelabs-ai-project2
-pip install -r requirements.txt
-jupyter notebook notebooks/ai_classification_project2.ipynb
-# Kernel → Restart & Run All
-```
-
-All randomness seeded with `RANDOM_STATE = 42`.
-Data hash logged per run to `logs/experiment_log.csv`.
-
----
-
-## 📁 Project Structure
+## 🏗️ Architecture: The IPO Model
 
 ```
-decodelabs-ai-project2/
+Raw Input ──► SANITIZE ──► MATCH INTENT ──► GENERATE RESPONSE ──► Output
+              (Stage 1)      (Stage 2)          (Stage 3)
+```
+
+| Stage | Module | Responsibility |
+|-------|--------|----------------|
+| **Input** | `sanitizer.py` | Lowercase, strip, remove noise, tokenize |
+| **Process** | `matcher.py` | O(1) synonym lookup → keyword scoring → confidence gating |
+| **Output** | `bot.py` | Personalize, log to memory, display response |
+
+**Why dictionary over if-elif?**
+An `if-elif` ladder is O(n) — lookup time grows linearly with the number of rules. A Python dictionary (hash map) is O(1) — lookup time is constant regardless of how many intents exist. Adding the 100th intent to a dict costs the same as adding the 5th. This is the correct data structure for any production intent router.
+
+---
+
+## 📁 Repository Structure
+
+```
+decodelabs-ai-project1/
+│
+├── chatbot/
+│   ├── __init__.py          # Package initializer — exposes CapitalIQBot
+│   ├── knowledge_base.py    # BASE_KNOWLEDGE, SYNONYM_MAP, KEYWORD_INTENT_MAP
+│   ├── sanitizer.py         # sanitize(), is_empty(), tokenize()
+│   ├── matcher.py           # P1 keyword matcher + P2 confidence scorer
+│   ├── memory.py            # ConversationMemory — history log + slot store
+│   └── bot.py               # CapitalIQBot class — orchestration + main loop
 │
 ├── notebooks/
-│   └── ai_classification_project2.ipynb   ← 44-cell main notebook
-│
-├── pipeline/                               ← Modular Python package
-│   ├── __init__.py
-│   ├── data_loader.py                      ← HuggingFace + sklearn fallback, SHA-256
-│   ├── preprocessor.py                     ← Split, scale, IQR outlier detection
-│   ├── trainer.py                          ← 4 base models + Ensemble + Pipeline
-│   ├── evaluator.py                        ← Metrics, CV, t-test, weighted F1, log
-│   └── visualizer.py                       ← All 11 plot functions → assets/
+│   └── project1_chatbot.ipynb   # Complete 19-cell Jupyter Notebook
 │
 ├── tests/
 │   ├── __init__.py
-│   └── test_pipeline.py                    ← 22 unit tests (pytest)
+│   └── test_chatbot.py      # 35 unit tests across all modules
 │
-├── models/                                 ← Saved artifacts (generated at runtime)
-│   ├── best_model_pipeline.pkl
-│   └── model_card.txt
+├── assets/
+│   └── demo_screenshot.png  # Add your terminal screenshot here
 │
-├── assets/                                 ← All plots (generated at runtime)
-├── logs/                                   ← Experiment CSV log (generated at runtime)
-│
-├── requirements.txt
 ├── .gitignore
+├── requirements.txt
 └── README.md
 ```
 
@@ -221,176 +68,184 @@ decodelabs-ai-project2/
 
 ## 🚀 Quick Start
 
-### 1. Clone / extract the project
+### 1. Clone the Repository
+
 ```bash
-unzip decodelabs-ai-project2.zip
-cd decodelabs-ai-project2
+git clone https://github.com/your-username/decodelabs-ai-project1.git
+cd decodelabs-ai-project1
 ```
 
-### 2. Create a virtual environment (recommended)
+### 2. (Optional) Create a Virtual Environment
+
 ```bash
-python -m venv .venv
-source .venv/bin/activate        # Linux / macOS
-.venv\Scripts\activate           # Windows
+python -m venv venv
+source venv/bin/activate        # macOS/Linux
+venv\Scripts\activate           # Windows
 ```
 
-### 3. Install dependencies
+### 3. Install Dependencies
+
 ```bash
 pip install -r requirements.txt
 ```
+> The core chatbot uses only the Python Standard Library. Jupyter and pytest are optional extras.
 
-### 4. Run unit tests
-```bash
-pytest tests/test_pipeline.py -v
-```
-All 22 tests should pass with `PASSED` status.
-
-### 5. Launch the notebook
-```bash
-cd notebooks
-jupyter notebook ai_classification_project2.ipynb
-```
-Run cells top-to-bottom (`Kernel → Restart & Run All`).
-
----
-
-## 📊 Pipeline Architecture
-
-```
-INPUT                  PROCESS                      OUTPUT
-─────                  ───────                      ──────
-Iris Dataset     →     Train-Test Split (80/20)  →  Confusion Matrix
-(HuggingFace /         StandardScaler             →  F1 Score
- sklearn)              KNN Elbow Method           →  ROC-AUC Curves
-                       KNN / DT / SVM / LR        →  SHAP Beeswarm
-                       Soft Voting Ensemble        →  Model Card
-                       5-Fold CV + t-test         →  Experiment Log
-```
-
----
-
-## 🤖 Models Trained
-
-| Model | Key Parameters | Role |
-|-------|---------------|------|
-| **KNN** | k = optimal (elbow) | Primary classifier |
-| **Decision Tree** | max_depth=5 | Interpretable baseline |
-| **SVM** | RBF kernel, probability=True | Kernel-based |
-| **Logistic Regression** | max_iter=1000 | Linear baseline |
-| **Voting Ensemble** | soft voting (all 4) | Best-of-all |
-
----
-
-## 📈 Evaluation Metrics
-
-| Metric | Description |
-|--------|-------------|
-| Accuracy | Fraction of correct predictions |
-| F1 (macro) | Harmonic mean of Precision & Recall |
-| Precision | Quality of positive predictions |
-| Recall | Coverage of actual positives |
-| ROC-AUC (OvR) | Discrimination across all thresholds |
-| Weighted F1 | Domain-aware (Versicolor/Virginica penalty ×2) |
-| Calibration | Mean deviation from perfect probability calibration |
-
----
-
-## 🧪 Running Tests
+### 4. Run the Chatbot (Interactive Terminal)
 
 ```bash
-pytest tests/test_pipeline.py -v --tb=short
+python -m chatbot.bot
 ```
 
-**22 tests across 4 sections:**
-- `TestDataLoader` (5 tests) — shape, columns, nulls, balance, hash
-- `TestPreprocessor` (6 tests) — splits, stratification, leakage, scaling
-- `TestTrainer` (6 tests) — types, accuracy, keys, pipeline structure
-- `TestEvaluator` (5 tests) — metric keys, ranges, CV length, calibration
+Or from the project root:
+```bash
+python chatbot/bot.py
+```
+
+### 5. Run the Jupyter Notebook
+
+```bash
+jupyter notebook notebooks/project1_chatbot.ipynb
+```
+
+### 6. Run the Unit Tests
+
+```bash
+# With pytest (recommended):
+python -m pytest tests/ -v
+
+# With unittest:
+python -m unittest discover tests/ -v
+```
 
 ---
 
-## 🔮 Explainability
+## 💬 Sample Conversation
 
-SHAP `KernelExplainer` is used for model-agnostic feature attribution.  
-Background: 20 training samples | Evaluation: full test set (50 nsamples per call).
+```
+══════════════════════════════════════════════════════════════
+  💹  CapitalIQ  v2.0.0  —  Finance & Investment Advisory
+  🎓  DecodeLabs AI Internship  |  Batch 2026
+  👤  Built by Ali Ahmad
+══════════════════════════════════════════════════════════════
 
-> ⏳ Expect ~30–60s runtime for SHAP cell on standard hardware.
+  You: hello
+
+  CapitalIQ: Hello! I'm CapitalIQ, your personal Finance & Investment Advisor.
+  I can help you understand stocks, bonds, mutual funds, ETFs, crypto,
+  inflation, compound interest, diversification, risk, portfolio strategy,
+  budgeting, emergency funds, SIPs, and IPOs.
+  What financial topic would you like to explore today?
+
+  You: my name is Ali
+
+  CapitalIQ: Nice to meet you, Ali! I'm CapitalIQ, your Finance & Investment
+  Advisor. Hello! I'm CapitalIQ...
+
+  You: what is compound interest?
+
+  CapitalIQ: Compound interest is interest earned on both your original
+  principal AND the accumulated interest from previous periods...
+  [DEBUG] intent='compound_interest' | confidence=0.250
+
+  You: tell me about ETFs
+
+  CapitalIQ: An ETF (Exchange-Traded Fund) is an investment fund that trades
+  on a stock exchange like an individual stock, throughout the trading day...
+
+  You: quit
+
+  CapitalIQ: It was a pleasure advising you today!...
+
+  ══ SESSION TRANSCRIPT — CapitalIQ ══════════════════════════
+  Total turns: 4
+  ═════════════════════════════════════════════════════════════
+```
 
 ---
 
-## 💾 Artifacts
+## 🧠 Knowledge Base
 
-After running the notebook:
+CapitalIQ covers **16 financial intents** with over **80 synonym/alias mappings**:
 
-| Artifact | Location | Description |
-|----------|----------|-------------|
-| `best_model_pipeline.pkl` | `models/` | Scaler + best model (joblib) |
-| `model_card.txt` | `models/` | Standardised model summary |
-| `experiment_log.csv` | `logs/` | Append-only run history |
-| `*.png` | `assets/` | All 14+ saved visualisations |
+| Intent | Example Triggers |
+|--------|-----------------|
+| `greeting` | hi, hello, hey, help, good morning |
+| `stocks` | stock, share, equity, dividend, NYSE |
+| `bonds` | bond, treasury, coupon, debenture, g-sec |
+| `mutual_funds` | mutual fund, NAV, AUM, expense ratio |
+| `etf` | ETF, index fund, passive investing |
+| `crypto` | bitcoin, BTC, ethereum, blockchain, DeFi |
+| `inflation` | inflation, CPI, purchasing power |
+| `compound_interest` | compounding, time value of money |
+| `diversification` | diversify, asset allocation, hedge |
+| `risk` | volatility, drawdown, risk tolerance |
+| `portfolio` | holdings, rebalancing, 60/40 |
+| `budgeting` | budget, 50/30/20, money management |
+| `emergency_fund` | emergency fund, safety net, savings |
+| `sip` | SIP, systematic investment plan, rupee-cost averaging |
+| `ipo` | IPO, DRHP, public listing |
+| `goodbye` | exit, quit, bye, done |
+
+---
+
+## ⚙️ Phase Architecture
+
+### Phase 1 — The Logic Engine
+- Multi-keyword intent matching using `KEYWORD_INTENT_MAP`
+- O(1) synonym resolution via `SYNONYM_MAP`
+- Fallback response for unrecognized inputs
+- Graceful handling of empty, whitespace, and special-character inputs
+
+### Phase 2 — The Production Upgrade
+- **Confidence Scoring**: normalized [0.0, 1.0] score; configurable threshold (default 0.15)
+- **Conversation Memory**: full session transcript + named entity slot store
+- **Name Extraction**: regex-based detection of "my name is", "I am", "call me"
+- **Personalization**: uses remembered name in periodic responses
+- **Session Summary**: displays history and stats at session end
 
 ---
 
-## 📚 Concepts Demonstrated
+## 🔬 Design Decisions
 
-- Supervised Learning (classification)
-- Stratified train/test split & anti-leakage scaling
-- Hyperparameter tuning (elbow method)
-- Multi-model comparison and ensemble methods
-- Evaluation beyond accuracy (F1, ROC-AUC)
-- Statistical significance testing (paired t-test)
-- Explainability (SHAP KernelExplainer)
-- Model calibration analysis
-- Production-ready sklearn Pipeline
-- Unit testing with pytest
+### Why Dictionary over If-Elif?
+An `if-elif` ladder has O(n) complexity — every new rule added increases the worst-case lookup time. A Python dictionary uses a hash table, giving O(1) average-case lookup regardless of scale. In production chatbots with thousands of intents, this architectural choice is non-negotiable.
 
----
+### The White-Box Advantage
+Rule-based systems are fully transparent. Every response can be traced back to: input → sanitized form → matched keyword → intent key → response value. There are no hallucinations, no unpredictable outputs. This traceability is legally required in regulated sectors (finance, healthcare) and is exactly what frameworks like NVIDIA NeMo Guardrails implement as the control layer above LLMs.
+
+### How This Connects to LLM Systems
+In hybrid production architectures, this chatbot's role is the **guardrail layer** — it handles high-confidence, known intents at zero cost and near-zero latency. Only when confidence falls below threshold does the query escalate to an LLM fallback. This pattern dramatically reduces LLM API costs while maintaining safety and auditability.
 
 ---
 
 ## 🛠️ Tech Stack
 
-| Tool | Version | Purpose |
-|---|---|---|
-| Python | 3.10+ | Core language |
-| scikit-learn | ≥1.4.0 | ML models · metrics · pipeline |
-| pandas | ≥2.0.0 | Data manipulation |
-| numpy | ≥1.26.0 | Numerical computing |
-| matplotlib | ≥3.8.0 | Base plotting |
-| seaborn | ≥0.13.0 | Statistical visualizations |
-| datasets (HuggingFace) | ≥2.18.0 | Primary data source |
-| scipy | ≥1.12.0 | Statistical significance testing |
-| shap | ≥0.44.0 | Model explainability |
-| joblib | ≥1.3.0 | Model serialization |
-| ipywidgets | ≥8.0.0 | Interactive prediction UI |
-| pytest | ≥8.0.0 | Unit testing |
-| Jupyter Notebook | ≥7.0.0 | Development environment |
+| Component | Technology |
+|-----------|-----------|
+| Language | Python 3.10+ |
+| Dependencies | Standard Library only (`re`, `datetime`, `unittest`) |
+| Notebook | Jupyter Notebook |
+| Testing | `unittest` + `pytest` |
+| Architecture | IPO Model, O(1) Hash Map, Modular OOP |
 
 ---
 
-## ⚠️ Known Limitations
+## ✅ DecodeLabs Spec Checklist
 
-- **KNN does not scale** — inference is O(n × d) at prediction time. Unsuitable for datasets beyond ~100k rows without approximation methods like FAISS.
-- **Iris is a benchmark, not a real problem** — near-perfect class separability (especially Setosa) is not representative of real-world noise, missing values, or class overlap.
-- **No Bayesian hyperparameter search** — GridSearchCV covers a fixed param grid. Production pipelines would use Optuna or Ray Tune for smarter search.
-- **Model not validated on external data** — all evaluation is in-distribution. A held-out external dataset would be needed to confirm generalization.
-
----
-
-## 🚀 Future Work
-
-- **Project 3 — Deep Learning & CNNs** — move from tabular classification to image classification using convolutional neural networks on a real image dataset.
-- **Scalable inference** — replace KNN with a neural network classifier and serve via FastAPI REST endpoint for production deployment.
-- **Proper experiment tracking** — integrate MLflow or Weights & Biases to replace the manual CSV logger with a full experiment management system.
-- **AutoML comparison** — benchmark the manual pipeline against TPOT or H2O AutoML to quantify the value of human-guided feature engineering.
+| Requirement | Satisfied By |
+|-------------|-------------|
+| Input Loop | `while True` in `CapitalIQBot.run()` — `bot.py` line 139 |
+| Sanitization | `sanitize()` in `sanitizer.py` — `.lower().strip()` + regex |
+| Knowledge Base | `BASE_KNOWLEDGE` dict (16 intents) in `knowledge_base.py` |
+| Fallback | `FALLBACK_RESPONSE` — returned when `score_intents()` finds no match |
+| Exit Strategy | `is_exit_command()` in `matcher.py` — `break` in main loop |
 
 ---
 
-## 🏢 About DecodeLabs
+## 📄 License
 
-DecodeLabs is an industrial AI training organisation based in Greater Lucknow, India.  
-📞 +91 89330 06408 | ✉ decodelabs.tech@gmail.com | 🌐 www.decodelabs.tech
+MIT License — free to use, modify, and distribute with attribution.
 
 ---
 
-*Built with ❤️ as part of DecodeLabs AI Internship — Batch 2026*
+*Built with discipline and curiosity as part of the DecodeLabs AI Industrial Training Programme, Batch 2026.*
