@@ -1,174 +1,160 @@
-# 💹 CapitalIQ — Rule-Based Finance & Investment Advisor Chatbot
+# CapitalIQ
 
-> **DecodeLabs AI Internship · Project 1 · Batch 2026**
-> Built by **Ali Ahmad**
+**Rule-Based Finance & Investment Advisor Chatbot**
 
-[![Python](https://img.shields.io/badge/Python-3.10%2B-blue?logo=python)](https://www.python.org/)
-[![Standard Library](https://img.shields.io/badge/Dependencies-Standard%20Library%20Only-green)]()
-[![Tests](https://img.shields.io/badge/Tests-35%20Unit%20Tests-brightgreen)]()
-[![License](https://img.shields.io/badge/License-MIT-lightgrey)]()
+[![Python](https://img.shields.io/badge/Python-3.10%2B-306998?logo=python&logoColor=white)](https://www.python.org/)
+[![Dependencies](https://img.shields.io/badge/Dependencies-Standard%20Library%20Only-2e7d32)]()
+[![Tests](https://img.shields.io/badge/Tests-61%20Passing-2e7d32)]()
+[![License](https://img.shields.io/badge/License-MIT-546e7a)]()
+[![DecodeLabs](https://img.shields.io/badge/DecodeLabs-Batch%202026-1a3c5e)]()
 
----
-
-## 📌 Project Overview
-
-**CapitalIQ** is a production-quality, rule-based AI chatbot built as Project 1 of the DecodeLabs Artificial Intelligence Industrial Training programme. It operates as a Finance & Investment Advisor — answering questions about stocks, bonds, mutual funds, ETFs, cryptocurrency, inflation, compound interest, diversification, risk management, portfolio construction, budgeting, emergency funds, SIPs, and IPOs.
-
-The project is intentionally built without machine learning — demonstrating that a well-engineered deterministic system using the **IPO (Input-Process-Output) model** and **O(1) dictionary-based intent matching** can be both robust and portfolio-worthy.
+> DecodeLabs AI Industrial Training Programme · Project 1 · Batch 2026
+> Author: **Ali Ahmad**
 
 ---
 
-## 🏗️ Architecture: The IPO Model
+## Overview
 
-```
-Raw Input ──► SANITIZE ──► MATCH INTENT ──► GENERATE RESPONSE ──► Output
-              (Stage 1)      (Stage 2)          (Stage 3)
-```
+CapitalIQ is a production-quality, rule-based conversational AI system built as Project 1 of the DecodeLabs Artificial Intelligence Industrial Training Programme. It operates as a Finance & Investment Advisor, responding to queries across 16 intent categories including stocks, bonds, ETFs, mutual funds, cryptocurrency, inflation, compound interest, portfolio strategy, and IPOs.
 
-| Stage | Module | Responsibility |
-|-------|--------|----------------|
-| **Input** | `sanitizer.py` | Lowercase, strip, remove noise, tokenize |
-| **Process** | `matcher.py` | O(1) synonym lookup → keyword scoring → confidence gating |
-| **Output** | `bot.py` | Personalize, log to memory, display response |
-
-**Why dictionary over if-elif?**
-An `if-elif` ladder is O(n) — lookup time grows linearly with the number of rules. A Python dictionary (hash map) is O(1) — lookup time is constant regardless of how many intents exist. Adding the 100th intent to a dict costs the same as adding the 5th. This is the correct data structure for any production intent router.
+The system is intentionally built without machine learning dependencies — demonstrating that a well-engineered deterministic architecture using the **Input-Process-Output (IPO) model** and **O(1) dictionary-based intent routing** produces a system that is both robust in production and fully auditable for regulated-industry use cases.
 
 ---
 
-## 📁 Repository Structure
+## Architecture
 
-```
+### IPO Pipeline
+Raw Input
+|
+v
+[ SANITIZE ]          .lower().strip() + regex normalization + tokenization
+|
+v
+[ MATCH INTENT ]      O(1) synonym lookup -> keyword voting -> confidence gate
+|
+v
+[ GENERATE RESPONSE ] personalize -> log to memory -> display
+|
+v
+Output
+
+### Module Responsibilities
+
+| Module | Responsibility |
+|---|---|
+| `sanitizer.py` | Input normalization pipeline — lowercase, strip, regex clean, tokenize |
+| `matcher.py` | Phase 1 keyword matcher + Phase 2 confidence scorer |
+| `knowledge_base.py` | `BASE_KNOWLEDGE` dict, `SYNONYM_MAP`, `KEYWORD_INTENT_MAP` |
+| `memory.py` | Session history log + named entity slot store |
+| `bot.py` | Orchestration layer — connects all modules, runs the main loop |
+
+### Why Dictionary over If-Elif
+
+An `if-elif` ladder performs a sequential scan — O(n) worst-case. Every new intent added increases lookup time linearly. A Python dictionary is a hash map — O(1) constant time regardless of how many intents exist. Adding the 100th intent costs the same as adding the 5th. For any production intent router, this is the only correct data structure.
+
+---
+
+## Repository Structure
 decodelabs-ai-project1/
-│
-├── chatbot/
-│   ├── __init__.py          # Package initializer — exposes CapitalIQBot
-│   ├── knowledge_base.py    # BASE_KNOWLEDGE, SYNONYM_MAP, KEYWORD_INTENT_MAP
-│   ├── sanitizer.py         # sanitize(), is_empty(), tokenize()
-│   ├── matcher.py           # P1 keyword matcher + P2 confidence scorer
-│   ├── memory.py            # ConversationMemory — history log + slot store
-│   └── bot.py               # CapitalIQBot class — orchestration + main loop
-│
-├── notebooks/
-│   └── project1_chatbot.ipynb   # Complete 19-cell Jupyter Notebook
-│
-├── tests/
-│   ├── __init__.py
-│   └── test_chatbot.py      # 35 unit tests across all modules
-│
-├── assets/
-│   └── demo_screenshot.png  # Add your terminal screenshot here
-│
-├── .gitignore
-├── requirements.txt
-└── README.md
-```
+|
++-- chatbot/
+|   +-- init.py           Package entry point
+|   +-- knowledge_base.py     Intent dictionary, synonym map, keyword map
+|   +-- sanitizer.py          sanitize(), is_empty(), tokenize()
+|   +-- matcher.py            Phase 1 + Phase 2 matchers, confidence scorer
+|   +-- memory.py             ConversationMemory class
+|   +-- bot.py                CapitalIQBot orchestration class + main loop
+|
++-- notebooks/
+|   +-- project1_chatbot.ipynb    19-cell Jupyter Notebook
+|
++-- tests/
+|   +-- init.py
+|   +-- test_chatbot.py       61 unit tests across all modules
+|
++-- report/
+|   +-- capitaliq_report.pdf  Project technical report (14 pages)
+|   +-- capitaliq_report.tex  LaTeX source
+|
++-- assets/
++-- .gitignore
++-- requirements.txt
++-- README.md
 
 ---
 
-## 🚀 Quick Start
+## Getting Started
 
-### 1. Clone the Repository
+### Prerequisites
+
+- Python 3.10+
+- pip
+
+The core chatbot has **zero third-party dependencies** — it runs on the Python Standard Library alone. Jupyter and pytest are listed in `requirements.txt` as optional extras for the notebook and test suite.
+
+### Installation
 
 ```bash
-git clone https://github.com/your-username/decodelabs-ai-project1.git
+git clone https://github.com/whozahm3d/decodelabs-ai-project1.git
 cd decodelabs-ai-project1
-```
-
-### 2. (Optional) Create a Virtual Environment
-
-```bash
-python -m venv venv
-source venv/bin/activate        # macOS/Linux
-venv\Scripts\activate           # Windows
-```
-
-### 3. Install Dependencies
-
-```bash
 pip install -r requirements.txt
 ```
-> The core chatbot uses only the Python Standard Library. Jupyter and pytest are optional extras.
 
-### 4. Run the Chatbot (Interactive Terminal)
+### Running the Chatbot
 
 ```bash
+# Recommended
 python -m chatbot.bot
-```
 
-Or from the project root:
-```bash
+# Alternative
 python chatbot/bot.py
 ```
 
-### 5. Run the Jupyter Notebook
+### Running the Notebook
 
 ```bash
 jupyter notebook notebooks/project1_chatbot.ipynb
 ```
 
-### 6. Run the Unit Tests
+### Running the Test Suite
 
 ```bash
-# With pytest (recommended):
 python -m pytest tests/ -v
-
-# With unittest:
-python -m unittest discover tests/ -v
 ```
 
 ---
 
-## 💬 Sample Conversation
-
-```
-══════════════════════════════════════════════════════════════
-  💹  CapitalIQ  v2.0.0  —  Finance & Investment Advisory
-  🎓  DecodeLabs AI Internship  |  Batch 2026
-  👤  Built by Ali Ahmad
-══════════════════════════════════════════════════════════════
-
-  You: hello
-
-  CapitalIQ: Hello! I'm CapitalIQ, your personal Finance & Investment Advisor.
-  I can help you understand stocks, bonds, mutual funds, ETFs, crypto,
-  inflation, compound interest, diversification, risk, portfolio strategy,
-  budgeting, emergency funds, SIPs, and IPOs.
-  What financial topic would you like to explore today?
-
-  You: my name is Ali
-
-  CapitalIQ: Nice to meet you, Ali! I'm CapitalIQ, your Finance & Investment
-  Advisor. Hello! I'm CapitalIQ...
-
-  You: what is compound interest?
-
-  CapitalIQ: Compound interest is interest earned on both your original
-  principal AND the accumulated interest from previous periods...
-  [DEBUG] intent='compound_interest' | confidence=0.250
-
-  You: tell me about ETFs
-
-  CapitalIQ: An ETF (Exchange-Traded Fund) is an investment fund that trades
-  on a stock exchange like an individual stock, throughout the trading day...
-
-  You: quit
-
-  CapitalIQ: It was a pleasure advising you today!...
-
-  ══ SESSION TRANSCRIPT — CapitalIQ ══════════════════════════
-  Total turns: 4
-  ═════════════════════════════════════════════════════════════
-```
+## Sample Session
+==============================================================
+CapitalIQ  v2.0.0  --  Finance & Investment Advisory
+DecodeLabs AI Internship  |  Batch 2026  |  Ali Ahmad
+Topics: stocks · bonds · ETFs · crypto · SIPs · IPOs
+Type 'exit' or 'quit' to end the session.
+You: hello
+CapitalIQ: Hello! I'm CapitalIQ, your Finance & Investment Advisor.
+Ask me about stocks, bonds, mutual funds, ETFs, crypto,
+inflation, SIPs, IPOs, and more.
+You: my name is Ali
+CapitalIQ: Nice to meet you, Ali! ...
+You: what is compound interest
+CapitalIQ: Compound interest is interest earned on both your original
+principal AND accumulated interest from previous periods...
+[Intent: compound_interest | Confidence: 0.250]
+You: btc
+CapitalIQ: Cryptocurrency is a decentralised digital currency...
+[Intent: crypto | Confidence: 1.000]
+You: quit
+CapitalIQ: It was a pleasure advising you today. Goodbye!
+[Session transcript displayed]
 
 ---
 
-## 🧠 Knowledge Base
+## Knowledge Base
 
-CapitalIQ covers **16 financial intents** with over **80 synonym/alias mappings**:
+16 intent categories with 70+ synonym and alias mappings.
 
-| Intent | Example Triggers |
-|--------|-----------------|
+| Intent | Trigger Examples |
+|---|---|
 | `greeting` | hi, hello, hey, help, good morning |
 | `stocks` | stock, share, equity, dividend, NYSE |
 | `bonds` | bond, treasury, coupon, debenture, g-sec |
@@ -188,64 +174,99 @@ CapitalIQ covers **16 financial intents** with over **80 synonym/alias mappings*
 
 ---
 
-## ⚙️ Phase Architecture
+## Two-Phase Implementation
 
-### Phase 1 — The Logic Engine
-- Multi-keyword intent matching using `KEYWORD_INTENT_MAP`
+### Phase 1 — Logic Engine
+
+- Multi-keyword intent matching via `KEYWORD_INTENT_MAP`
 - O(1) synonym resolution via `SYNONYM_MAP`
 - Fallback response for unrecognized inputs
-- Graceful handling of empty, whitespace, and special-character inputs
+- Graceful handling of empty, whitespace-only, and special-character inputs
 
-### Phase 2 — The Production Upgrade
-- **Confidence Scoring**: normalized [0.0, 1.0] score; configurable threshold (default 0.15)
-- **Conversation Memory**: full session transcript + named entity slot store
-- **Name Extraction**: regex-based detection of "my name is", "I am", "call me"
-- **Personalization**: uses remembered name in periodic responses
-- **Session Summary**: displays history and stats at session end
+### Phase 2 — Production Upgrade
+
+Phase 2 is a strict superset of Phase 1 — every Phase 1 feature works unchanged.
+
+| Feature | Implementation |
+|---|---|
+| Confidence Scoring | Normalized [0.0, 1.0] score; configurable threshold (default 0.15) |
+| Conversation Memory | Full session transcript + named entity slot store |
+| Name Extraction | Regex detection of introduction patterns (`my name is`, `I am`, `call me`) |
+| Personalization | Stored name used in periodic responses |
+| Session Summary | Full history and statistics displayed at session end |
 
 ---
 
-## 🔬 Design Decisions
+## Test Coverage
 
-### Why Dictionary over If-Elif?
-An `if-elif` ladder has O(n) complexity — every new rule added increases the worst-case lookup time. A Python dictionary uses a hash table, giving O(1) average-case lookup regardless of scale. In production chatbots with thousands of intents, this architectural choice is non-negotiable.
+```bash
+python -m pytest tests/ -v --tb=short
+```
+
+| Test Class | Module | Tests |
+|---|---|---|
+| `TestSanitizer` | `sanitizer.py` | 15 |
+| `TestMatcher` | `matcher.py` | 17 |
+| `TestConversationMemory` | `memory.py` | 16 |
+| `TestCapitalIQBot` | `bot.py` | 13 |
+| **Total** | | **61 / 61 passing** |
+
+Edge cases explicitly covered: `None` input, empty string, whitespace-only, special characters, mixed case, long natural sentences, embedded exit commands, name extraction.
+
+---
+
+## Design Notes
 
 ### The White-Box Advantage
-Rule-based systems are fully transparent. Every response can be traced back to: input → sanitized form → matched keyword → intent key → response value. There are no hallucinations, no unpredictable outputs. This traceability is legally required in regulated sectors (finance, healthcare) and is exactly what frameworks like NVIDIA NeMo Guardrails implement as the control layer above LLMs.
 
-### How This Connects to LLM Systems
-In hybrid production architectures, this chatbot's role is the **guardrail layer** — it handles high-confidence, known intents at zero cost and near-zero latency. Only when confidence falls below threshold does the query escalate to an LLM fallback. This pattern dramatically reduces LLM API costs while maintaining safety and auditability.
+Every response in CapitalIQ is fully traceable:
+"BITCOIN!" -> sanitize -> "bitcoin" -> SYNONYM_MAP -> "crypto" -> KNOWLEDGE_BASE -> response
+
+No hidden weights, no probability distributions, no hallucination risk. In regulated industries — finance (SEBI, SEC), healthcare (FDA AI/ML guidance), insurance (GDPR Article 22) — this kind of auditability is a compliance requirement, not a preference.
+
+### Connection to Production AI Guardrail Systems
+
+In modern hybrid architectures, the rule-based layer sits above the LLM as a deterministic filter:
+User Input
+|
++-- Rule match? -- YES --> Instant Response  (zero latency, zero cost, zero hallucination)
+|
++-- No match   -- NO  --> Pass to LLM        (flexible, but probabilistic)
+
+CapitalIQ's `CONFIDENCE_THRESHOLD` is the direct analogue of the routing threshold used in frameworks like NVIDIA NeMo Guardrails and Meta Llama Guard. High-confidence, known intents are resolved by the rule layer instantly. Only genuinely novel or ambiguous queries escalate to the LLM — reducing both cost and hallucination surface area.
 
 ---
 
-## 🛠️ Tech Stack
+## Tech Stack
 
-| Component | Technology |
-|-----------|-----------|
+| Component | Details |
+|---|---|
 | Language | Python 3.10+ |
 | Dependencies | Standard Library only (`re`, `datetime`, `unittest`) |
-| Notebook | Jupyter Notebook |
-| Testing | `unittest` + `pytest` |
-| Architecture | IPO Model, O(1) Hash Map, Modular OOP |
+| Notebook | Jupyter Notebook — 19 cells |
+| Testing | `unittest` + `pytest` — 61 tests |
+| Architecture | IPO Model, O(1) Hash Map, Modular OOP, Separation of Concerns |
 
 ---
 
-## ✅ DecodeLabs Spec Checklist
+## DecodeLabs Specification Compliance
 
-| Requirement | Satisfied By |
-|-------------|-------------|
-| Input Loop | `while True` in `CapitalIQBot.run()` — `bot.py` line 139 |
-| Sanitization | `sanitize()` in `sanitizer.py` — `.lower().strip()` + regex |
-| Knowledge Base | `BASE_KNOWLEDGE` dict (16 intents) in `knowledge_base.py` |
-| Fallback | `FALLBACK_RESPONSE` — returned when `score_intents()` finds no match |
-| Exit Strategy | `is_exit_command()` in `matcher.py` — `break` in main loop |
+| Requirement | Implementation |
+|---|---|
+| Input Loop | `while True` in `CapitalIQBot.run()` (`bot.py`) with `try/except` for graceful interruption |
+| Sanitization | `sanitize()` in `sanitizer.py` — `.lower().strip()` + regex pipeline |
+| Knowledge Base | `BASE_KNOWLEDGE` dict — 16 intents, `.get()` method used exclusively |
+| Fallback | `FALLBACK_RESPONSE` returned when no keywords match or confidence < threshold |
+| Exit Strategy | `is_exit_command()` in `matcher.py` — `break` exits the main loop cleanly |
+
+All 5 mandatory requirements satisfied.
 
 ---
 
-## 📄 License
+## License
 
 MIT License — free to use, modify, and distribute with attribution.
 
 ---
 
-*Built with discipline and curiosity as part of the DecodeLabs AI Industrial Training Programme, Batch 2026.*
+*DecodeLabs AI Industrial Training Programme · Batch 2026*
